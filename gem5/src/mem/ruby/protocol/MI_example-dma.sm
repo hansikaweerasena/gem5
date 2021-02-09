@@ -29,7 +29,7 @@
 
 machine(MachineType:DMA, "DMA Controller") 
     : DMASequencer * dma_sequencer;
-      Cycles request_latency := 50;
+      Cycles request_latency := 6;
 
       MessageBuffer * responseFromDir, network="From", virtual_network="1",
             vnet_type="response";
