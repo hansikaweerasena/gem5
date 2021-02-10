@@ -31,7 +31,7 @@ machine(MachineType:L1Cache, "MI Example L1 Cache")
     : Sequencer * sequencer;
       CacheMemory * cacheMemory;
       Cycles cache_response_latency := 12;
-      Cycles issue_latency := 2;
+      Cycles issue_latency := 70;
       bool send_evictions;
 
       // NETWORK BUFFERS
