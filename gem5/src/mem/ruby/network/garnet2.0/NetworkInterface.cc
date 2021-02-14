@@ -248,7 +248,7 @@ NetworkInterface::wakeup()
     // case, we should schedule another wakeup to ensure the credit is sent
     // back.
     if (outCreditQueue.getSize() > 0) {
-        outCreditLink->scheduleEventAbsolute(clockEdge(Cycles(1)));
+        outCreditLink->scheduleEventAbsolute(clockEdge(Cycles(2)));
     }
 }
 
@@ -457,7 +457,7 @@ NetworkInterface::scheduleOutputLink()
             t_flit->set_time(curCycle() + Cycles(1));
             outFlitQueue.insert(t_flit);
             // schedule the out link
-            outNetLink->scheduleEventAbsolute(clockEdge(Cycles(1)));
+            outNetLink->scheduleEventAbsolute(clockEdge(Cycles(5)));
 
             if (t_flit->get_type() == TAIL_ ||
                t_flit->get_type() == HEAD_TAIL_) {
