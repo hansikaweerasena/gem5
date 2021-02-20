@@ -48,6 +48,8 @@ class GarnetNetwork(RubyNetwork):
     fault_model = Param.FaultModel(NULL, "network fault model");
     garnet_deadlock_threshold = Param.UInt32(50000,
                               "network-level deadlock threshold")
+    cw_bits = Param.UInt32(0, "No of Chaffing and Winnowing bits");
+
 
 class GarnetNetworkInterface(ClockedObject):
     type = 'GarnetNetworkInterface'
@@ -61,6 +63,7 @@ class GarnetNetworkInterface(ClockedObject):
                           "number of virtual networks")
     garnet_deadlock_threshold = Param.UInt32(Parent.garnet_deadlock_threshold,
                                       "network-level deadlock threshold")
+    cw_bits = Param.UInt32(Parent.cw_bits, "No of Chaffing and Winnowing bits");
 
 class GarnetRouter(BasicRouter):
     type = 'GarnetRouter'

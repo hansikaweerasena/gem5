@@ -36,6 +36,7 @@
 
 #include "base/cast.hh"
 #include "debug/RubyNetwork.hh"
+#include "debug/Hanz.hh"
 #include "mem/ruby/network/MessageBuffer.hh"
 #include "mem/ruby/network/garnet2.0/Credit.hh"
 #include "mem/ruby/network/garnet2.0/flitBuffer.hh"
@@ -49,6 +50,7 @@ NetworkInterface::NetworkInterface(const Params *p)
     m_router_id(-1), m_vc_allocator(m_virtual_networks, 0),
     m_vc_round_robin(0), outFlitQueue(), outCreditQueue(),
     m_deadlock_threshold(p->garnet_deadlock_threshold),
+    cw_bits(p->cw_bits),
     vc_busy_counter(m_virtual_networks, 0)
 {
     const int num_vcs = m_vc_per_vnet * m_virtual_networks;
@@ -316,8 +318,14 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
 
     // Number of flits is dependent on the link bandwidth available.
     // This is expressed in terms of bytes/cycle or the flit size
-    int num_flits = (int) ceil((double) m_net_ptr->MessageSizeType_to_int(
-        net_msg_ptr->getMessageSize())/m_net_ptr->getNiFlitSize());
+    int num_flits = (int) ceil((double) (m_net_ptr->MessageSizeType_to_int(
+        net_msg_ptr->getMessageSize()) + calculateSizeIncrease())/m_net_ptr->getNiFlitSize());
+
+
+    DPRINTF(Hanz, "Number------- flits %d  %d \n", calculateSizeIncrease(), num_flits );
+
+    // num_flits = num_flits*5;
+
 
     // loop to convert all multicast messages into unicast messages
     for (int ctr = 0; ctr < dest_nodes.size(); ctr++) {
@@ -382,6 +390,20 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
     }
     return true ;
 }
+
+// Size increase due to added security of C&W and AONT
+double
+NetworkInterface::calculateSizeIncrease()
+{
+    int w = cw_bits;
+    int tag_length = 16;
+    int ctr_length = 16;
+    int ls_size = 16;
+
+    return (2*w*( tag_length + ctr_length + 1) + ls_size*log2(ls_size) - w)/8;
+
+}
+
 
 // Looking for a free output vc
 int

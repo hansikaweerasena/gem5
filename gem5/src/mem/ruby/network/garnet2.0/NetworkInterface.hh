@@ -83,6 +83,7 @@ class NetworkInterface : public ClockedObject, public Consumer
     flitBuffer outFlitQueue;
     flitBuffer outCreditQueue;
     int m_deadlock_threshold;
+    int cw_bits;
     std::vector<OutVcState> outVcState;
 
     NetworkLink *inNetLink;
@@ -108,6 +109,8 @@ class NetworkInterface : public ClockedObject, public Consumer
 
     bool checkStallQueue();
     bool flitisizeMessage(MsgPtr msg_ptr, int vnet);
+
+    double calculateSizeIncrease();
     int calculateVC(int vnet);
 
     void scheduleOutputLink();

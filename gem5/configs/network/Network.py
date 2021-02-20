@@ -74,7 +74,8 @@ def define_options(parser):
     parser.add_option("--garnet-deadlock-threshold", action="store",
                       type="int", default=50000,
                       help="network-level deadlock threshold.")
-
+    parser.add_option("--cw-bits", type="int", default=0,
+                      help="number of bits for Chaffing and winnowing")
 
 def create_network(options, ruby):
 
@@ -108,6 +109,7 @@ def init_network(options, network, InterfaceClass):
         network.ni_flit_size = options.link_width_bits / 8
         network.routing_algorithm = options.routing_algorithm
         network.garnet_deadlock_threshold = options.garnet_deadlock_threshold
+        network.cw_bits = options.cw_bits
 
     if options.network == "simple":
         network.setup_buffers()
