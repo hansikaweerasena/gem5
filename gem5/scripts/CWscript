@@ -1,0 +1,7 @@
+#!/bin/bash
+for i in {10..20..2}
+do
+   ../build/X86_MI/gem5.debug -d ../m5out/fft/overhead/tag16ctr16/w_$i --debug-flags=Cache,RubyNetwork ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=$i --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/FFT -o "-p 1"
+done
+
+
