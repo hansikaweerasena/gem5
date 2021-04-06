@@ -380,7 +380,6 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
             m_net_ptr->increment_injected_flits(vnet);
             flit *fl = new flit(i, vc, vnet, route, num_flits, new_msg_ptr,
                 curCycle());
-
             fl->set_src_delay(curCycle() - ticksToCycles(msg_ptr->getTime()));
             niOutVcs[vc].insert(fl);
         }
@@ -395,6 +394,10 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
 double
 NetworkInterface::calculateSizeIncrease()
 {
+    if( cw_bits < 1){
+        return 0;
+    }
+
     int w = cw_bits;
     int tag_length = 16;
     int ctr_length = 16;
