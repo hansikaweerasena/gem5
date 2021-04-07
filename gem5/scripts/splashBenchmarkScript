@@ -1,0 +1,27 @@
+#!/bin/bash
+> progress
+for FILE in ../benchmark/splash2/*  ;do 
+   filename=`basename "$FILE"`
+   echo $filename "is in progress"
+   echo $filename "is in progress" >> progress
+   ../build/X86_MI_NO_sec/gem5.debug -d ../m5out/cwres2/$filename/no_sec ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=0 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash2/$filename -o "-p 1"
+   ../build/X86_MI_enc/gem5.debug -d ../m5out/cwres2/$filename/enc ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=0 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash2/$filename -o "-p 1"
+   echo "no sec and enc done" >> progress
+   ../build/X86_MI_cw/gem5.debug -d ../m5out/cwres2/$filename/w_1 ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=1 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash2/$filename -o "-p 1"
+   echo "1" >> progress
+   for i in {0..32..2}
+   do
+      ../build/X86_MI_cw/gem5.debug -d ../m5out/cwres2/$filename/w_$i ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=$i --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash2/$filename -o "-p 1"
+      echo $i >> progress
+   done
+
+   echo $filename 'done'
+   echo $filename "done" >> progress
+done
+
+
+
+
+
+
+
