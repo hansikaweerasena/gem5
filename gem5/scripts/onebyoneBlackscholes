@@ -1,0 +1,24 @@
+#!/bin/bash
+export filename=blackscholes
+
+> scriptout/progressOneByOne_$filename
+echo $filename "is in progress"
+echo $filename "is in progress" >> scriptout/progressOneByOne_$filename
+# ../build/X86_NO_sec/gem5.opt -d ../m5out/cwres_parsec/$filename/no_sec ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=0 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/parsec/$filename/$filename -o '1 /gem5/gem5/benchmark/parsec/blackscholes/in_4K.txt /gem5/gem5/benchmark/parsec/blackscholes/prices.txt'
+../build/X86_enc/gem5.opt -d ../m5out/cwres_parsec/$filename/enc ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=0 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/parsec/$filename/$filename -o '1 /gem5/gem5/benchmark/parsec/blackscholes/in_4K.txt /gem5/gem5/benchmark/parsec/blackscholes/prices.txt'
+echo "no sec and enc done" >> progress
+../build/X86_cw/gem5.opt -d ../m5out/cwres_parsec/$filename/w_1 ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=1 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/parsec$filename/$filename -o '1 /gem5/gem5/benchmark/parsec/blackscholes/in_4K.txt /gem5/gem5/benchmark/parsec/blackscholes/prices.txt'
+../build/X86_cw/gem5.opt -d ../m5out/cwres_parsec/$filename/w_32 ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=32 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/parsec$filename/$filename -o '1 /gem5/gem5/benchmark/parsec/blackscholes/in_4K.txt /gem5/gem5/benchmark/parsec/blackscholes/prices.txt'
+echo "1" >> scriptout/progressOneByOne_$filename
+for i in {2..30..2}
+do
+   ../build/X86_cw/gem5.opt -d ../m5out/cwres_parsec/$filename/w_$i ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=$i --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/parsec/$filename/$filename -o '1 /gem5/gem5/benchmark/parsec/blackscholes/in_4K.txt /gem5/gem5/benchmark/parsec/blackscholes/prices.txt'
+   echo $i >> scriptout/progressOneByOne_$filename
+done
+
+echo $filename 'done'
+echo $filename "done" >> scriptout/progressOneByOne_$filename
+
+
+
+

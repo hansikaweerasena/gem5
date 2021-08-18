@@ -1,22 +1,22 @@
 #!/bin/bash
 export filename=$1
 
-> progressOneByOne_$filename
+> scriptout/progressOneByOne_$filename
 echo $filename "is in progress"
-echo $filename "is in progress" >> progressOneByOne_$filename
+echo $filename "is in progress" >> scriptout/progressOneByOne_$filename
 ../build/X86_MI_NO_sec/gem5.debug -d ../m5out/cwres_splash/$filename/no_sec ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=0 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash-pthread/$filename -o "-p 1"
 ../build/X86_MI_enc/gem5.debug -d ../m5out/cwres_splash/$filename/enc ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=0 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash-pthread/$filename -o "-p 1"
 echo "no sec and enc done" >> progress
 ../build/X86_MI_cw/gem5.debug -d ../m5out/cwres_splash/$filename/w_1 ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=1 --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash-pthread/$filename -o "-p 1"
-echo "1" >> progressOneByOne_$filename
+echo "1" >> scriptout/progressOneByOne_$filename
 for i in {2..32..2}
 do
    ../build/X86_MI_cw/gem5.debug -d ../m5out/cwres_splash/$filename/w_$i ../configs/example/se.py --num-cpus=16 --num-dir=16 --cpu-type=TimingSimpleCPU --cpu-clock=2GHz --caches --l1d_size=16kB --l1i_size=16kB --mem-type=SimpleMemory --cw-bits=$i --mem-size=4GB --ruby --topology=Mesh_XY --mesh-rows=4 --network=garnet2.0 -c ../benchmark/splash-pthread/$filename -o "-p 1"
-   echo $i >> progressOneByOne_$filename
+   echo $i >> scriptout/progressOneByOne_$filename
 done
 
 echo $filename 'done'
-echo $filename "done" >> progressOneByOne_$filename
+echo $filename "done" >> scriptout/progressOneByOne_$filename
 
 
 
