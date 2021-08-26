@@ -45,6 +45,9 @@
 #include "sim/stats.hh"
 #include "sim/system.hh"
 
+
+#include "debug/GarnetSyntheticTraffic2.hh"
+
 using namespace std;
 
 int TESTER_NETWORK=0;
@@ -196,6 +199,9 @@ GarnetSyntheticTraffic::generatePkt()
         destination = singleDest;
     } else if (traffic == UNIFORM_RANDOM_) {
         destination = random_mt.random<unsigned>(0, num_destinations - 1);
+        destination = rand() % num_destinations; 
+        DPRINTF(GarnetSyntheticTraffic2, "soruce: %#i destination: %#i \n", source, destination);
+        // select destination based on soruce_id for specific source_id.
     } else if (traffic == BIT_COMPLEMENT_) {
         dest_x = radix - src_x - 1;
         dest_y = radix - src_y - 1;

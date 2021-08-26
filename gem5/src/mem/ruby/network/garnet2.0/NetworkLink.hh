@@ -81,6 +81,7 @@ class NetworkLink : public ClockedObject, public Consumer
     // Statistical variables
     unsigned int m_link_utilized;
     std::vector<unsigned int> m_vc_load;
+    int previous_flit_recived_time;
 };
 
 #endif // __MEM_RUBY_NETWORK_GARNET2_0_NETWORKLINK_HH__

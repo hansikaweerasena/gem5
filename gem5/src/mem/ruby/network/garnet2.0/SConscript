@@ -49,3 +49,7 @@ Source('VirtualChannel.cc')
 Source('flitBuffer.cc')
 Source('flit.cc')
 Source('Credit.cc')
+
+
+
+DebugFlag('Hello')
