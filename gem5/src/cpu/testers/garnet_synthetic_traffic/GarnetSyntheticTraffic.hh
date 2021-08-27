@@ -39,6 +39,7 @@
 #include "sim/sim_exit.hh"
 #include "sim/sim_object.hh"
 #include "sim/stats.hh"
+#include "base/random.hh"
 
 enum TrafficType {BIT_COMPLEMENT_ = 0,
                   BIT_REVERSE_ = 1,
@@ -127,6 +128,11 @@ class GarnetSyntheticTraffic : public ClockedObject
     double injRate;
     int injVnet;
     int precision;
+
+    // Correlated Pair
+    int corPairP1;
+    int corPairP2;
+    Random random_gen;
 
     const Cycles responseLimit;
 

@@ -95,6 +95,11 @@ GarnetSyntheticTraffic::GarnetSyntheticTraffic(const Params *p)
       responseLimit(p->response_limit),
       masterId(p->system->getMasterId(this))
 {
+    corPairP1 = 0;
+    corPairP2 = 3;
+    // random_gen = Random((unsigned int)time(NULL));
+    random_mt.init((unsigned int)time(NULL));
+
     // set up counters
     noResponseCycles = 0;
     schedule(tickEvent, 0);
@@ -152,7 +157,7 @@ GarnetSyntheticTraffic::tick()
     // - generate a random number between 0 and 10^precision
     // - send pkt if this number is < injRate*(10^precision)
     bool sendAllowedThisCycle;
-    double injRange = pow((double) 10, (double) precision);
+    double injRange = pow((double) 10, (double) precision); 
     unsigned trySending = random_mt.random<unsigned>(0, (int) injRange);
     if (trySending < injRate*injRange)
         sendAllowedThisCycle = true;
@@ -194,14 +199,18 @@ GarnetSyntheticTraffic::generatePkt()
     int src_x = id%radix;
     int src_y = id/radix;
 
-    if (singleDest >= 0)
+    // corelated destination selection if current processor is the other pair.
+    if(source == corPairP1){
+        destination = corPairP2;
+    } else if(source == corPairP2){
+        destination = corPairP1;
+    }
+    // finished corelated destination selection 
+    else if (singleDest >= 0)
     {
         destination = singleDest;
     } else if (traffic == UNIFORM_RANDOM_) {
         destination = random_mt.random<unsigned>(0, num_destinations - 1);
-        destination = rand() % num_destinations; 
-        DPRINTF(GarnetSyntheticTraffic2, "soruce: %#i destination: %#i \n", source, destination);
-        // select destination based on soruce_id for specific source_id.
     } else if (traffic == BIT_COMPLEMENT_) {
         dest_x = radix - src_x - 1;
         dest_y = radix - src_y - 1;
@@ -245,6 +254,8 @@ GarnetSyntheticTraffic::generatePkt()
     else {
         fatal("Unknown Traffic Type: %s!\n", traffic);
     }
+
+    DPRINTF(GarnetSyntheticTraffic2, "soruce: %#i destination: %#i \n", source, destination);
 
     // The source of the packets is a cache.
     // The destination of the packets is a directory.
