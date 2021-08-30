@@ -202,8 +202,10 @@ GarnetSyntheticTraffic::generatePkt()
     // corelated destination selection if current processor is the other pair.
     if(source == corPairP1){
         destination = corPairP2;
+        // DPRINTF(GarnetSyntheticTraffic2,"destination = corPairP1\n");
     } else if(source == corPairP2){
         destination = corPairP1;
+        // DPRINTF(GarnetSyntheticTraffic2,"destination = corPairP2\n");
     }
     // finished corelated destination selection 
     else if (singleDest >= 0)
@@ -211,6 +213,11 @@ GarnetSyntheticTraffic::generatePkt()
         destination = singleDest;
     } else if (traffic == UNIFORM_RANDOM_) {
         destination = random_mt.random<unsigned>(0, num_destinations - 1);
+        // if (destination ==  corPairP1 || destination ==  corPairP2) {
+        //     DPRINTF(GarnetSyntheticTraffic2,"destination != corPairP des : %#i sou : %#i\n", destination, source);
+        //     destination = random_mt.random<unsigned>(0, num_destinations - 1);
+        // }
+        // DPRINTF(GarnetSyntheticTraffic2,"destination != corPairP\n");
     } else if (traffic == BIT_COMPLEMENT_) {
         dest_x = radix - src_x - 1;
         dest_y = radix - src_y - 1;

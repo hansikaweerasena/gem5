@@ -67,10 +67,10 @@ NetworkLink::wakeup()
         t_flit->set_time(curCycle() + m_latency);
         linkBuffer.insert(t_flit);
         if(m_type == EXT_IN_){
-            // DPRINTF(Hello, "NI to R Inter packet delay: %#i flit size: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size());
+            DPRINTF(Hello, "NI to R Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
         }
         else if(m_type == EXT_OUT_){
-            // DPRINTF(Hello, "R to NI Inter packet delay: %#i flit size: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size());
+            DPRINTF(Hello, "R to NI Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
         }
         previous_flit_recived_time = t_flit->get_time();
         link_consumer->scheduleEventAbsolute(clockEdge(m_latency));
