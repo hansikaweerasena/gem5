@@ -63,7 +63,7 @@ NetworkInterface::NetworkInterface(const Params *p)
         time = Cycles(INFINITE_);
     }
 
-    DPRINTF(Hello, "NI created for: %#i %#i \n", m_id);
+    // DPRINTF(Hello, "NI created for: %#i %#i \n", m_id);
 
     m_stall_count.resize(m_virtual_networks);
 }
@@ -336,7 +336,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         MsgPtr new_msg_ptr = msg_ptr->clone();
         NodeID destID = dest_nodes[ctr];
 
-        DPRINTF(Hello, "packet from: %#i to: %#i \n", m_id, destID );
+        DPRINTF(Hello, "packet from: %#i : to: %#i \n", m_id, destID );
 
         Message *new_net_msg_ptr = new_msg_ptr.get();
         if (dest_nodes.size() > 1) {

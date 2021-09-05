@@ -262,7 +262,7 @@ GarnetSyntheticTraffic::generatePkt()
         fatal("Unknown Traffic Type: %s!\n", traffic);
     }
 
-    DPRINTF(GarnetSyntheticTraffic2, "soruce: %#i destination: %#i \n", source, destination);
+    DPRINTF(GarnetSyntheticTraffic2, "soruce: %#i :destination: %#i \n", source, destination);
 
     // The source of the packets is a cache.
     // The destination of the packets is a directory.

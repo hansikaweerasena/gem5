@@ -66,11 +66,17 @@ NetworkLink::wakeup()
         flit *t_flit = link_srcQueue->getTopFlit();
         t_flit->set_time(curCycle() + m_latency);
         linkBuffer.insert(t_flit);
+        int ipd = t_flit->get_time() - previous_flit_recived_time;
+        // if(previous_flit_recived_time == 0){
+        //     ipd = 0;
+        // }
         if(m_type == EXT_IN_){
-            DPRINTF(Hello, "NI to R Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
+            // DPRINTF(Hello, "NI to R Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
+            DPRINTF(Hello, "Upstream: IPD: %#i :no of flits: %#i :vnet: %#i \n", ipd,t_flit->get_size(), t_flit->get_vnet());
         }
         else if(m_type == EXT_OUT_){
-            DPRINTF(Hello, "R to NI Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
+            // DPRINTF(Hello, "R to NI Inter packet delay: %#i flit size: %#i vnet: %#i \n", t_flit->get_time() - previous_flit_recived_time, t_flit->get_size(), t_flit->get_vnet());
+            DPRINTF(Hello, "Downstream: IPD: %#i :no of flits: %#i :vnet: %#i \n", ipd, t_flit->get_size(), t_flit->get_vnet());
         }
         previous_flit_recived_time = t_flit->get_time();
         link_consumer->scheduleEventAbsolute(clockEdge(m_latency));
