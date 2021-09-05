@@ -107,7 +107,9 @@ def create_system(options, full_system, system, dma_ports, bootmem,
         dir_cntrl.requestToDir = MessageBuffer()
         dir_cntrl.forwardToDir = MessageBuffer()
         dir_cntrl.responseToDir = MessageBuffer()
-
+        
+        # dir_cntrl.forwardFromDir = MessageBuffer()
+        # dir_cntrl.responseFromDir = MessageBuffer()
 
     all_cntrls = l1_cntrl_nodes + dir_cntrl_nodes
     ruby_system.network.number_of_virtual_networks = 3
