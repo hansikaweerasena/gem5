@@ -1,0 +1,31 @@
+----synthetic traffic generation count---- 
+0->3 : 13
+3->0 : 10
+1->1 : 2
+2->3 : 5
+1->2 : 3
+1->0 : 2
+2->0 : 1
+2->2 : 4
+2->1 : 1
+
+----packet count on network interface---- 
+0->7(3) : 13
+3->4(0) : 10
+1->5(1) : 2
+2->7(3) : 5
+1->6(2) : 3
+1->4(0) : 2
+2->4(0) : 1
+2->6(2) : 4
+2->5(1) : 1
+
+----flit count on network link---- 
+link_0(0)_Upstream : 25
+link_7(3)_Downstream : 30
+link_3(3)_Upstream : 30
+link_4(0)_Downstream : 33
+link_1(1)_Upstream : 18
+link_5(1)_Downstream : 3
+link_2(2)_Upstream : 19
+link_6(2)_Downstream : 23
