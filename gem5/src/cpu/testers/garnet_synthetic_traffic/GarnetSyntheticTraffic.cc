@@ -93,10 +93,10 @@ GarnetSyntheticTraffic::GarnetSyntheticTraffic(const Params *p)
       injVnet(p->inj_vnet),
       precision(p->precision),
       responseLimit(p->response_limit),
+      corPairP1(p->cor_pair_p1),
+      corPairP2(p->cor_pair_p2),
       masterId(p->system->getMasterId(this))
 {
-    corPairP1 = 0;
-    corPairP2 = 3;
     // random_gen = Random((unsigned int)time(NULL));
     random_mt.init((unsigned int)time(NULL));
 

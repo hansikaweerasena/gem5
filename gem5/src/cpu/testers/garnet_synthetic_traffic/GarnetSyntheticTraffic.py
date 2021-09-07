@@ -53,3 +53,5 @@ class GarnetSyntheticTraffic(ClockedObject):
                                             due to lack of progress")
     test = MasterPort("Port to the memory system to test")
     system = Param.System(Parent.any, "System we belong to")
+    cor_pair_p1 = Param.Int("Identifier for 1st cor pair IP")
+    cor_pair_p2 = Param.Int("Identifier for 2nd cor pair IP")

@@ -83,6 +83,14 @@ parser.add_option("--inj-vnet", type="int", default=-1,
                         0 and 1 are 1-flit, 2 is 5-flit.\
                         Set to -1 to inject randomly in all vnets.")
 
+parser.add_option("--cor-p1", type="int", default=0,
+                  help="Identifier for P1 for correlated\
+                        traffic collection")
+
+parser.add_option("--cor-p2", type="int", default=0,
+                  help="Identifier for P1 for correlated\
+                        traffic collection")
+
 #
 # Add the ruby specific and protocol specific options
 #
@@ -110,7 +118,9 @@ cpus = [ GarnetSyntheticTraffic(
                      inj_rate=options.injectionrate,
                      inj_vnet=options.inj_vnet,
                      precision=options.precision,
-                     num_dest=options.num_dirs) \
+                     num_dest=options.num_dirs,
+                     cor_pair_p1=options.cor_p1,
+                     cor_pair_p2=options.cor_p2) \
          for i in range(options.num_cpus) ]
 
 # create the desired simulated system

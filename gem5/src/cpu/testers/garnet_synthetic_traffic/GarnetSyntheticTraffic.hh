@@ -129,13 +129,14 @@ class GarnetSyntheticTraffic : public ClockedObject
     int injVnet;
     int precision;
 
-    // Correlated Pair
-    int corPairP1;
-    int corPairP2;
     Random random_gen;
 
     const Cycles responseLimit;
 
+    // Correlated Pair
+    int corPairP1;
+    int corPairP2;
+    
     MasterID masterId;
 
     void completeRequest(PacketPtr pkt);
