@@ -1,7 +1,12 @@
 import glob
 import os
 
-number_of_nodes = "4_nodes"
+NUMBER_OF_NODES = "4_nodes"
+BASE_PATH = "/home/hansika/gem5/gem5/scripts/"
+CALCULATED_DIR_PATH = BASE_PATH + "calculated/"
+RAW_DATA_DIR_PATH = BASE_PATH + "raw_dd/"
+NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data/"
+
 
 def create_dir(path):
     if not os.path.exists(path):
@@ -12,8 +17,8 @@ def remove_prefix(text, prefix):
         return text[len(prefix):]
     return text
    
-def write_to_file(file,dirr,syntheticTrafficCount, niPacketCount, flitCount):
-   with open('/home/hansika/gem5/gem5/scripts/calculated/'+ number_of_nodes + "/" + dirr + "/" +  file, 'w') as f:
+def write_to_file(file, dirr, syntheticTrafficCount, niPacketCount, flitCount):
+   with open(CALCULATED_DIR_PATH + NUMBER_OF_NODES + "/" + dirr + "/" +  file, 'w') as f:
         f.write("----synthetic traffic generation count---- \n")
         for key,value in syntheticTrafficCount.items():
             f.write("%s : %s\n" % (key, value))
@@ -91,12 +96,12 @@ def process_file(filename):
    convert_to_numpy(nlFlitIPD)
 
 
-list_subfolders_with_paths = [f.path for f in os.scandir('/home/hansika/gem5/gem5/scripts/raw_data/' + number_of_nodes + "/") if f.is_dir()]
-print('/home/hansika/gem5/gem5/scripts/raw_data/' + number_of_nodes + "/")
-create_dir('/home/hansika/gem5/gem5/scripts/calculated/'+ number_of_nodes)
+list_subfolders_with_paths = [f.path for f in os.scandir(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/") if f.is_dir()]
+print(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/")
+create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES)
 
 for sub_dir in list_subfolders_with_paths:
-   create_dir('/home/hansika/gem5/gem5/scripts/calculated/'+ number_of_nodes + "/" + os.path.basename(sub_dir))
-   for filename in glob.glob(sub_dir + "/*"): 
+   create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES + "/" + os.path.basename(sub_dir))
+   for filename in glob.glob(sub_dir + "/[!stats]*.txt"): 
       process_file(filename)
    
