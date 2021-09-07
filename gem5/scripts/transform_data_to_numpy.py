@@ -1,27 +1,30 @@
 import glob
 import os
 
-number_of_nodes = "fft"
+number_of_nodes = "4_nodes"
 
+def create_dir(path):
+    if not os.path.exists(path):
+       os.makedirs(path)
 
 def remove_prefix(text, prefix):
     if text.startswith(prefix):
         return text[len(prefix):]
     return text
    
-def write_to_file(file,dir,syntheticTrafficCount, niPacketCount, flitCount):
-   with open('/home/hansika/gem5/gem5/scripts/calculated/' + file, 'w') as f:
-    f.write("----synthetic traffic generation count---- \n")
-    for key,value in syntheticTrafficCount.items():
-        f.write("%s : %s\n" % (key, value))
-    f.write("\n")     
-    f.write("----packet count on network interface---- \n")
-    for key,value in niPacketCount.items():
-        f.write("%s : %s\n" % (key, value))
-    f.write("\n")  
-    f.write("----flit count on network link---- \n")
-    for key,value in flitCount.items():
-        f.write("%s : %s\n" % (key, value))
+def write_to_file(file,dirr,syntheticTrafficCount, niPacketCount, flitCount):
+   with open('/home/hansika/gem5/gem5/scripts/calculated/'+ number_of_nodes + "/" + dirr + "/" +  file, 'w') as f:
+        f.write("----synthetic traffic generation count---- \n")
+        for key,value in syntheticTrafficCount.items():
+            f.write("%s : %s\n" % (key, value))
+        f.write("\n")     
+        f.write("----packet count on network interface---- \n")
+        for key,value in niPacketCount.items():
+            f.write("%s : %s\n" % (key, value))
+        f.write("\n")  
+        f.write("----flit count on network link---- \n")
+        for key,value in flitCount.items():
+            f.write("%s : %s\n" % (key, value))
 
 def convert_to_numpy(nlFlitIPD):
    print(nlFlitIPD)
@@ -85,14 +88,15 @@ def process_file(filename):
       for line in f:
         process_line(line, niPacketCount, syntheticTrafficCount, flitCount, nlFlitIPD, no_of_nodes)
    write_to_file(fileN, str(node1) + "_" + str(node2), syntheticTrafficCount, niPacketCount, flitCount)
-
-#   convert_to_numpy(nlFlitIPD)
+   convert_to_numpy(nlFlitIPD)
 
 
 list_subfolders_with_paths = [f.path for f in os.scandir('/home/hansika/gem5/gem5/scripts/raw_data/' + number_of_nodes + "/") if f.is_dir()]
 print('/home/hansika/gem5/gem5/scripts/raw_data/' + number_of_nodes + "/")
+create_dir('/home/hansika/gem5/gem5/scripts/calculated/'+ number_of_nodes)
 
 for sub_dir in list_subfolders_with_paths:
-   for filename in glob.glob(sub_dir + "/*"):
+   create_dir('/home/hansika/gem5/gem5/scripts/calculated/'+ number_of_nodes + "/" + os.path.basename(sub_dir))
+   for filename in glob.glob(sub_dir + "/*"): 
       process_file(filename)
    
