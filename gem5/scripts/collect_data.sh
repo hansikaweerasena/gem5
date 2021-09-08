@@ -1,6 +1,7 @@
 export nodes=$1
 export rows=$2
 export iterations=$3
+export simCycles=$4
 
 echo "Running traffic corelation data for and rows : " $nodes " " $rows
 
@@ -14,9 +15,9 @@ do
         for k in $( eval echo {0..$(($iterations-1))})
         do
             export out_filename="${nodes}_${i}_${j}_${k}.txt" 
-            ../build/X86_DeepCorr/gem5.debug -d raw_dd/"${nodes}_nodes"/${i}_${j} --debug-file=$out_filename --debug-flags=GarnetSyntheticTraffic2,Hello ../configs/example/garnet_synth_traffic.py --cor-p1=$i --cor-p2=$j --num-cpus=4 --num-dirs=4 --network=garnet2.0 --topology=Mesh_XY --mesh-rows=2 --sim-cycles=1000  --synthetic=uniform_random --injectionrate=0.01
+            ../build/X86_DeepCorr/gem5.debug -d raw_data/"${nodes}_nodes"/${i}_${j} --debug-file=$out_filename --debug-flags=GarnetSyntheticTraffic2,Hello ../configs/example/garnet_synth_traffic.py --cor-p1=$i --cor-p2=$j --num-cpus=$nodes --num-dirs=$nodes --network=garnet2.0 --topology=Mesh_XY --mesh-rows=$rows --sim-cycles=$simCycles  --synthetic=uniform_random --injectionrate=0.01
         done
-        rm -r raw_dd/"${nodes}_nodes"/${i}_${j}/fs
+        rm -r raw_data/"${nodes}_nodes"/${i}_${j}/fs
     done
 done
 
