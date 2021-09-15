@@ -8,6 +8,9 @@ CALCULATED_DIR_PATH = BASE_PATH + "calculated/"
 RAW_DATA_DIR_PATH = BASE_PATH + "raw_data/"
 NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data/"
 
+NUM_ITERATIONS_PER_FILE = 200
+MIN_MAX_LENGTH = 450
+
 
 def create_dir(path):
     if not os.path.exists(path):
@@ -37,11 +40,12 @@ def write_to_file(file, dirr, syntheticTrafficCount, niPacketCount, flitCount):
 
 def isCorrelated(node1, node2, up_key, down_key, no_of_nodes):
     if node1 == up_key and node2 == down_key - no_of_nodes:
-        return np.array[1]
+        x = 1
     elif node2 == up_key and node1 == down_key - no_of_nodes:
-        return np.array[1]
+        x = 1
     else:
-        return np.array[0]
+        x = 0
+    return x
 
 
 def convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir):
@@ -51,12 +55,6 @@ def convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, nump
                 correlation = isCorrelated(node1, node2, up_key, down_key, no_of_nodes)
                 flow_pair = [np.array(up_value), np.array(down_value), correlation]
                 numpy_for_dir.append(np.array(flow_pair))
-    # print(flow_for_file.shape)
-    # print(flow_for_file)
-    # print("-------------------------------")
-    # print(up_flit_ipd)
-    # print(down_flit_ipd)
-    # print("-------------------------------")
 
 
 def process_sythetic_traffic_count(frm, to, syntheticTrafficCount):
@@ -131,7 +129,7 @@ def process_file(filename, numpy_for_dir):
     convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir)
 
 
-list_subfolders_with_paths = [f.path for f in os.scandir(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/") if f.is_dir()]
+list_subdir_with_paths = [f.path for f in os.scandir(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/") if f.is_dir()]
 print(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/")
 create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES)
 create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES)
@@ -139,12 +137,12 @@ create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES)
 numpy_for_dir = []
 i = 1
 j = 0
-for sub_dir in list_subfolders_with_paths:
+for sub_dir in list_subdir_with_paths:
     create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES + "/" + os.path.basename(sub_dir))
     for filename in glob.glob(sub_dir + "/[!stats]*.txt"):
         process_file(filename, numpy_for_dir)
         i += 1
-        if i == 2:
+        if i == NUM_ITERATIONS_PER_FILE:
             x = np.array(numpy_for_dir)
             np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES, 'train_set_' + str(j)), np.array(numpy_for_dir))
             j += 1
