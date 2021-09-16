@@ -8,7 +8,7 @@ CALCULATED_DIR_PATH = BASE_PATH + "calculated/"
 RAW_DATA_DIR_PATH = BASE_PATH + "raw_data/"
 NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data/"
 
-NUM_ITERATIONS_PER_FILE = 200
+NUM_ITERATIONS_PER_FILE = 100
 MIN_MAX_LENGTH = 450
 
 
@@ -48,13 +48,18 @@ def isCorrelated(node1, node2, up_key, down_key, no_of_nodes):
     return x
 
 
-def convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir):
+def convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir):
     for up_key, up_value in up_flit_ipd.items():
         for down_key, down_value in down_flit_ipd.items():
             if up_key != down_key - no_of_nodes:
                 correlation = isCorrelated(node1, node2, up_key, down_key, no_of_nodes)
-                flow_pair = [np.array(up_value), np.array(down_value), correlation]
+                up_flow = np.array(up_value)
+                down_flow = np.array(down_value)
+                up_flow.resize(MIN_MAX_LENGTH, refcheck=False)
+                down_flow.resize(MIN_MAX_LENGTH, refcheck=False)
+                flow_pair = [up_flow, down_flow]
                 numpy_for_dir.append(np.array(flow_pair))
+                correlation_dir.append(correlation)
 
 
 def process_sythetic_traffic_count(frm, to, syntheticTrafficCount):
@@ -109,7 +114,7 @@ def process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_fli
         process_flit_flow(y[1], y[2], y[4], flitCount, up_flit_ipd, down_flit_ipd, no_of_nodes)
 
 
-def process_file(filename, numpy_for_dir):
+def process_file(filename, numpy_for_dir, correlation_dir):
     niPacketCount = {}
     flitCount = {}
     syntheticTrafficCount = {}
@@ -126,27 +131,33 @@ def process_file(filename, numpy_for_dir):
         for line in f:
             process_line(line, niPacketCount, syntheticTrafficCount, flitCount, down_flit_ipd, up_flit_ipd, no_of_nodes)
     write_to_file(fileN, str(node1) + "_" + str(node2), syntheticTrafficCount, niPacketCount, flitCount)
-    convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir)
+    convert_to_numpy(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nodes, numpy_for_dir, correlation_dir)
 
+def save_numpy_array(numpy_for_dir, correlation_dir, index):
+    np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES + "/X", index), np.array(numpy_for_dir))
+    np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES + "/Y", index), np.array(correlation_dir))
 
 list_subdir_with_paths = [f.path for f in os.scandir(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/") if f.is_dir()]
 print(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/")
 create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES)
-create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES)
+create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES +"/X")
+create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES +"/Y")
 
 numpy_for_dir = []
+correlation_dir = []
 i = 1
 j = 0
 for sub_dir in list_subdir_with_paths:
     create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES + "/" + os.path.basename(sub_dir))
     for filename in glob.glob(sub_dir + "/[!stats]*.txt"):
-        process_file(filename, numpy_for_dir)
+        process_file(filename, numpy_for_dir, correlation_dir)
         i += 1
         if i == NUM_ITERATIONS_PER_FILE:
             x = np.array(numpy_for_dir)
-            np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES, 'train_set_' + str(j)), np.array(numpy_for_dir))
+            save_numpy_array(numpy_for_dir, correlation_dir, str(j))
             j += 1
             i = 1
             numpy_for_dir = []
+            correlation_dir = []
 if len(numpy_for_dir) > 0:
-    np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES, 'train_set_' + str(j)), np.array(numpy_for_dir))
+    save_numpy_array(numpy_for_dir, correlation_dir, str(j))
