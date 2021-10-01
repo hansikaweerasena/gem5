@@ -3,11 +3,11 @@ import os
 import numpy as np
 from random import randint
 
-NUMBER_OF_NODES = "64_nodes"
+NUMBER_OF_NODES = "69_nodes"
 BASE_PATH = "/home/hansika/gem5/gem5/scripts/"
-CALCULATED_DIR_PATH = BASE_PATH + "calculated/"
+CALCULATED_DIR_PATH = BASE_PATH + "calculated_test/"
 RAW_DATA_DIR_PATH = BASE_PATH + "raw_data/"
-NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data/"
+NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data_test/"
 
 NUM_ITERATIONS_PER_FILE = 100
 MIN_MAX_LENGTH = 450
