@@ -142,6 +142,7 @@ class GarnetSyntheticTraffic : public ClockedObject
     void completeRequest(PacketPtr pkt);
 
     void generatePkt();
+    int generateDest(int num1, int num2, int max_num);
     void sendPkt(PacketPtr pkt);
     void initTrafficType();
 

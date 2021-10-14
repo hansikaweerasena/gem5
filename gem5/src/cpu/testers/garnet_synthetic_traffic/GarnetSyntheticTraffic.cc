@@ -198,26 +198,34 @@ GarnetSyntheticTraffic::generatePkt()
     int source = id;
     int src_x = id%radix;
     int src_y = id/radix;
+    int dest_prob = 90;
 
+    // corelated destination will selected with dest_prob probability
     // corelated destination selection if current processor is the other pair.
     if(source == corPairP1){
-        destination = corPairP2;
-        // DPRINTF(GarnetSyntheticTraffic2,"destination = corPairP1\n");
+        int rand_num = random_mt.random<unsigned>(0, 100);
+        if(rand_num < dest_prob){
+            destination = corPairP2;
+        }
+        else{
+            destination = generateDest(corPairP1, corPairP2, num_destinations - 1);
+        }
     } else if(source == corPairP2){
-        destination = corPairP1;
-        // DPRINTF(GarnetSyntheticTraffic2,"destination = corPairP2\n");
+        int rand_num = random_mt.random<unsigned>(0, 100);
+        if(rand_num < dest_prob){
+            destination = corPairP1;
+        }
+        else{
+            destination = generateDest(corPairP1, corPairP2, num_destinations - 1);
+        }
     }
     // finished corelated destination selection 
     else if (singleDest >= 0)
     {
         destination = singleDest;
     } else if (traffic == UNIFORM_RANDOM_) {
-        destination = random_mt.random<unsigned>(0, num_destinations - 1);
-        // if (destination ==  corPairP1 || destination ==  corPairP2) {
-        //     DPRINTF(GarnetSyntheticTraffic2,"destination != corPairP des : %#i sou : %#i\n", destination, source);
-        //     destination = random_mt.random<unsigned>(0, num_destinations - 1);
-        // }
-        // DPRINTF(GarnetSyntheticTraffic2,"destination != corPairP\n");
+        destination = generateDest(corPairP1, corPairP2, num_destinations - 1);
+
     } else if (traffic == BIT_COMPLEMENT_) {
         dest_x = radix - src_x - 1;
         dest_y = radix - src_y - 1;
@@ -342,6 +350,16 @@ GarnetSyntheticTraffic::generatePkt()
     pkt->senderState = NULL;
 
     sendPkt(pkt);
+}
+
+int 
+GarnetSyntheticTraffic:: generateDest(int num1, int num2, int max_num){
+    int out_num = random_mt.random<unsigned>(0, max_num);
+    while (out_num == num1 || out_num == num2)
+    {
+        out_num = random_mt.random<unsigned>(0, max_num);
+    }
+    return out_num;
 }
 
 void
