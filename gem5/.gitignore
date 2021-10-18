@@ -7,6 +7,7 @@ cscope.out
 *~
 .*.swp
 .*.swo
+.vscode/
 m5out
 src/doxygen/html
 ext/dramsim2/DRAMSim2
@@ -34,3 +35,7 @@ scripts/calculated/
 scripts/numpy_data/
 scripts/raw_data/
 scripts/raw_dd/
+scripts/calculated_test/
+scripts/numpy_data_*/
+scripts/dummy_*/
+scripts/.idea/

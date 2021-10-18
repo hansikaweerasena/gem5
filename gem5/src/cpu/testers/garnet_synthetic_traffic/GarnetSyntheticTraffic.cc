@@ -198,7 +198,7 @@ GarnetSyntheticTraffic::generatePkt()
     int source = id;
     int src_x = id%radix;
     int src_y = id/radix;
-    int dest_prob = 90;
+    int dest_prob = 101;
 
     // corelated destination will selected with dest_prob probability
     // corelated destination selection if current processor is the other pair.
