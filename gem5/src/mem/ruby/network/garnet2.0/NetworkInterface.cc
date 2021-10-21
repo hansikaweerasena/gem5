@@ -43,6 +43,7 @@
 
 
 #include "debug/Hello.hh"
+#include "base/random.hh"
 
 using namespace std;
 
@@ -66,6 +67,7 @@ NetworkInterface::NetworkInterface(const Params *p)
     // DPRINTF(Hello, "NI created for: %#i %#i \n", m_id);
 
     m_stall_count.resize(m_virtual_networks);
+    random_gen = Random((unsigned int)time(NULL));
 }
 
 void
@@ -373,13 +375,21 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         // initialize hops_traversed to -1
         // so that the first router increments it to 0
         route.hops_traversed = -1;
-
         m_net_ptr->increment_injected_packets(vnet);
+
+        int rand_num = random_mt.random<unsigned>(0, 100);
+        bool add_dummy_flit = false;
+        if(rand_num < 50){
+            add_dummy_flit = true;
+            num_flits = num_flits + 1;
+        }
         for (int i = 0; i < num_flits; i++) {
             m_net_ptr->increment_injected_flits(vnet);
             flit *fl = new flit(i, vc, vnet, route, num_flits, new_msg_ptr,
                 curCycle());
-
+            if(add_dummy_flit == true && (i == num_flits - 1)){
+                fl->set_is_dummy(true);
+            }
             fl->set_src_delay(curCycle() - ticksToCycles(msg_ptr->getTime()));
             niOutVcs[vc].insert(fl);
         }

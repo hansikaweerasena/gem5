@@ -44,6 +44,8 @@
 #include "mem/ruby/slicc_interface/Message.hh"
 #include "params/GarnetNetworkInterface.hh"
 
+#include "base/random.hh"
+
 class MessageBuffer;
 class flitBuffer;
 
@@ -83,6 +85,9 @@ class NetworkInterface : public ClockedObject, public Consumer
     flitBuffer outFlitQueue;
     flitBuffer outCreditQueue;
     int m_deadlock_threshold;
+
+    Random random_gen;
+
     std::vector<OutVcState> outVcState;
 
     NetworkLink *inNetLink;
@@ -105,6 +110,7 @@ class NetworkInterface : public ClockedObject, public Consumer
     std::vector<MessageBuffer *> outNode_ptr;
     // When a vc stays busy for a long time, it indicates a deadlock
     std::vector<int> vc_busy_counter;
+    
 
     bool checkStallQueue();
     bool flitisizeMessage(MsgPtr msg_ptr, int vnet);
