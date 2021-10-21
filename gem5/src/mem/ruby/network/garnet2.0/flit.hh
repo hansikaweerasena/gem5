@@ -44,6 +44,8 @@ class flit
     flit() {}
     flit(int id, int vc, int vnet, RouteInfo route, int size,
          MsgPtr msg_ptr, Cycles curTime);
+    flit(int id, int vc, int vnet, RouteInfo route, int size,
+         MsgPtr msg_ptr, Cycles curTime, bool is_dummy);
 
     int get_outport() {return m_outport; }
     int get_size() { return m_size; }

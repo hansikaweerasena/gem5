@@ -59,6 +59,13 @@ flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
         m_type = BODY_;
 }
 
+// constructor delegation
+flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
+    MsgPtr msg_ptr, Cycles curTime): flit(id, vc, vnet, route, size, msg_ptr, curTime, false)
+{
+    
+}
+
 // Flit can be printed out for debugging purposes
 void
 flit::print(std::ostream& out) const
