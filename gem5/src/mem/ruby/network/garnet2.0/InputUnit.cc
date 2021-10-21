@@ -76,50 +76,70 @@ InputUnit::wakeup()
         int vc = t_flit->get_vc();
         t_flit->increment_hops(); // for stats
 
-        if ((t_flit->get_type() == HEAD_) ||
-            (t_flit->get_type() == HEAD_TAIL_)) {
-
-            assert(virtualChannels[vc].get_state() == IDLE_);
-            set_vc_active(vc, m_router->curCycle());
-
-            // Route computation for this vc
-            int outport = m_router->route_compute(t_flit->get_route(),
-                m_id, m_direction);
-
-            // Update output port in VC
-            // All flits in this packet will use this output port
-            // The output port field in the flit is updated after it wins SA
-            grant_outport(vc, outport);
-
-        } else {
-            assert(virtualChannels[vc].get_state() == ACTIVE_);
+        //removing dummy flit logic
+        int no_of_hops = t_flit->get_route().hops_traversed;
+        if(no_of_hops == 2){
+            int m_size = t_flit->get_size();
+            if(m_size == 2){
+                t_flit->set_size(1);
+                if(t_flit->get_id() == 0 ){
+                    t_flit->set_type(HEAD_TAIL_);
+                }
+            }else if(m_size == 6){
+                t_flit->set_size(5);
+                if(t_flit->get_id() == 4 ){
+                    t_flit->set_type(TAIL_);
+                }
+            }
         }
+        //end of removing dummy flit logic
+
+        if(no_of_hops < 2 || !t_flit->get_is_dummy()){
+            if ((t_flit->get_type() == HEAD_) ||
+                (t_flit->get_type() == HEAD_TAIL_)) {
+
+                assert(virtualChannels[vc].get_state() == IDLE_);
+                set_vc_active(vc, m_router->curCycle());
+
+                // Route computation for this vc
+                int outport = m_router->route_compute(t_flit->get_route(),
+                    m_id, m_direction);
+
+                // Update output port in VC
+                // All flits in this packet will use this output port
+                // The output port field in the flit is updated after it wins SA
+                grant_outport(vc, outport);
+
+            } else {
+                assert(virtualChannels[vc].get_state() == ACTIVE_);
+            }
 
 
-        // Buffer the flit
-        virtualChannels[vc].insertFlit(t_flit);
+            // Buffer the flit
+            virtualChannels[vc].insertFlit(t_flit);
 
-        int vnet = vc/m_vc_per_vnet;
-        // number of writes same as reads
-        // any flit that is written will be read only once
-        m_num_buffer_writes[vnet]++;
-        m_num_buffer_reads[vnet]++;
+            int vnet = vc/m_vc_per_vnet;
+            // number of writes same as reads
+            // any flit that is written will be read only once
+            m_num_buffer_writes[vnet]++;
+            m_num_buffer_reads[vnet]++;
 
-        Cycles pipe_stages = m_router->get_pipe_stages();
-        if (pipe_stages == 1) {
-            // 1-cycle router
-            // Flit goes for SA directly
-            t_flit->advance_stage(SA_, m_router->curCycle());
-        } else {
-            assert(pipe_stages > 1);
-            // Router delay is modeled by making flit wait in buffer for
-            // (pipe_stages cycles - 1) cycles before going for SA
+            Cycles pipe_stages = m_router->get_pipe_stages();
+            if (pipe_stages == 1) {
+                // 1-cycle router
+                // Flit goes for SA directly
+                t_flit->advance_stage(SA_, m_router->curCycle());
+            } else {
+                assert(pipe_stages > 1);
+                // Router delay is modeled by making flit wait in buffer for
+                // (pipe_stages cycles - 1) cycles before going for SA
 
-            Cycles wait_time = pipe_stages - Cycles(1);
-            t_flit->advance_stage(SA_, m_router->curCycle() + wait_time);
+                Cycles wait_time = pipe_stages - Cycles(1);
+                t_flit->advance_stage(SA_, m_router->curCycle() + wait_time);
 
-            // Wakeup the router in that cycle to perform SA
-            m_router->schedule_wakeup(Cycles(wait_time));
+                // Wakeup the router in that cycle to perform SA
+                m_router->schedule_wakeup(Cycles(wait_time));
+            }
         }
     }
 }
