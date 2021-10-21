@@ -58,6 +58,7 @@ class flit
     flit_type get_type() { return m_type; }
     std::pair<flit_stage, Cycles> get_stage() { return m_stage; }
     Cycles get_src_delay() { return src_delay; }
+    bool get_is_dummy(){return is_dummy}
 
     void set_outport(int port) { m_outport = port; }
     void set_time(Cycles time) { m_time = time; }
@@ -108,6 +109,7 @@ class flit
     int m_outport;
     Cycles src_delay;
     std::pair<flit_stage, Cycles> m_stage;
+    bool is_dummy;
 };
 
 inline std::ostream&

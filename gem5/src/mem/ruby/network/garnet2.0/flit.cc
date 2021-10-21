@@ -32,7 +32,7 @@
 
 // Constructor for the flit
 flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
-    MsgPtr msg_ptr, Cycles curTime)
+    MsgPtr msg_ptr, Cycles curTime, bool is_dummy)
 {
     m_size = size;
     m_msg_ptr = msg_ptr;
@@ -45,6 +45,7 @@ flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
     m_route = route;
     m_stage.first = I_;
     m_stage.second = m_time;
+    is_dummy = is_dummy;
 
     if (size == 1) {
         m_type = HEAD_TAIL_;
@@ -72,6 +73,7 @@ flit::print(std::ostream& out) const
     out << "Dest NI=" << m_route.dest_ni << " ";
     out << "Dest Router=" << m_route.dest_router << " ";
     out << "Enqueue Time=" << m_enqueue_time << " ";
+    out << "Is Dummy=" << is_dummy << " ";
     out << "]";
 }
 
