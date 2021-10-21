@@ -60,7 +60,7 @@ class flit
     flit_type get_type() { return m_type; }
     std::pair<flit_stage, Cycles> get_stage() { return m_stage; }
     Cycles get_src_delay() { return src_delay; }
-    bool get_is_dummy(){return is_dummy}
+    bool get_is_dummy(){return m_is_dummy;}
 
     void set_outport(int port) { m_outport = port; }
     void set_time(Cycles time) { m_time = time; }
@@ -68,6 +68,9 @@ class flit
     void set_route(RouteInfo route) { m_route = route; }
     void set_src_delay(Cycles delay) { src_delay = delay; }
     void set_dequeue_time(Cycles time) { m_dequeue_time = time; }
+    void set_is_dummy(bool is_dummy){is_dummy = m_is_dummy;}
+    void set_size(int size){m_size = size;}
+    void set_type(flit_type type){m_type = type;}
 
     void increment_hops() { m_route.hops_traversed++; }
     void print(std::ostream& out) const;
@@ -111,7 +114,7 @@ class flit
     int m_outport;
     Cycles src_delay;
     std::pair<flit_stage, Cycles> m_stage;
-    bool is_dummy;
+    bool m_is_dummy;
 };
 
 inline std::ostream&
