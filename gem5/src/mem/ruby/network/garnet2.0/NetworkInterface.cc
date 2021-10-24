@@ -379,15 +379,17 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
 
         int rand_num = random_mt.random<unsigned>(0, 100);
         bool add_dummy_flit = false;
+        bool contains_dummy = false;
         if(rand_num < 50){
             add_dummy_flit = true;
+            contains_dummy = true;
             num_flits = num_flits + 1;
         }
         for (int i = 0; i < num_flits; i++) {
             m_net_ptr->increment_injected_flits(vnet);
             flit *fl = new flit(i, vc, vnet, route, num_flits, new_msg_ptr,
-                curCycle());
-            if(add_dummy_flit == true && (i == num_flits - 1)){
+                curCycle(), contains_dummy);
+            if(add_dummy_flit && (i == 0)){
                 fl->set_is_dummy(true);
             }
             fl->set_src_delay(curCycle() - ticksToCycles(msg_ptr->getTime()));

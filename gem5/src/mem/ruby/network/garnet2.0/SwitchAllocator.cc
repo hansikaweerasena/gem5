@@ -126,6 +126,14 @@ SwitchAllocator::arbitrate_inports()
                     send_allowed(inport, invc, outport, outvc);
 
                 if (make_request) {
+
+                    flit *t_flit = input_unit->peekTopFlit(invc);
+                    if(t_flit->get_route().hops_traversed == 2 && t_flit->get_is_dummy()){
+                        input_unit->getTopFlit(invc);
+                        input_unit->increment_credit(invc, false, m_router->curCycle());
+                        break;
+                    }
+
                     m_input_arbiter_activity++;
                     m_port_requests[outport][inport] = true;
                     m_vc_winners[outport][inport]= invc;

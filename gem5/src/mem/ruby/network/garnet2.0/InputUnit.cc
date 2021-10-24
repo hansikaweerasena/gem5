@@ -79,26 +79,30 @@ InputUnit::wakeup()
         //removing dummy flit logic
         int no_of_hops = t_flit->get_route().hops_traversed;
         if(no_of_hops == 2){
-            int m_size = t_flit->get_size();
-            if(m_size == 2){
-                t_flit->set_size(1);
-                if(t_flit->get_id() == 0 ){
-                    t_flit->set_type(HEAD_TAIL_);
-                }
-            }else if(m_size == 6){
-                t_flit->set_size(5);
-                if(t_flit->get_id() == 4 ){
-                    t_flit->set_type(TAIL_);
+            int m_initial_size = t_flit->get_size();
+            if(t_flit->get_contains_dummy()){
+                t_flit->set_size(m_initial_size - 1);
+                if(t_flit->get_size() == 1){
+                    if(t_flit->get_id() == 1 ){
+                        t_flit->set_id(0);
+                        t_flit->set_type(HEAD_TAIL_);
+                    }
+                }else{
+                    if(t_flit->get_id() == 1){
+                        t_flit->set_type(HEAD_);
+                    }
+                    t_flit->set_id(t_flit->get_id() - 1);
                 }
             }
+            
         }
         //end of removing dummy flit logic
 
-        if(no_of_hops < 2 || !t_flit->get_is_dummy()){
+        // if(no_of_hops != 2 || !t_flit->get_is_dummy()){
             if ((t_flit->get_type() == HEAD_) ||
                 (t_flit->get_type() == HEAD_TAIL_)) {
 
-                assert(virtualChannels[vc].get_state() == IDLE_);
+                // assert(virtualChannels[vc].get_state() == IDLE_);
                 set_vc_active(vc, m_router->curCycle());
 
                 // Route computation for this vc
@@ -140,7 +144,10 @@ InputUnit::wakeup()
                 // Wakeup the router in that cycle to perform SA
                 m_router->schedule_wakeup(Cycles(wait_time));
             }
-        }
+        // }
+        // else{
+        //     increment_credit(t_flit->get_vc(), true, m_router->curCycle());
+        // }
     }
 }
 

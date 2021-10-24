@@ -43,9 +43,9 @@ class flit
   public:
     flit() {}
     flit(int id, int vc, int vnet, RouteInfo route, int size,
-         MsgPtr msg_ptr, Cycles curTime);
+         MsgPtr msg_ptr, Cycles curTime, bool contains_dummy);
     flit(int id, int vc, int vnet, RouteInfo route, int size,
-         MsgPtr msg_ptr, Cycles curTime, bool is_dummy);
+         MsgPtr msg_ptr, Cycles curTime, bool contains_dummy, bool is_dummy);
 
     int get_outport() {return m_outport; }
     int get_size() { return m_size; }
@@ -61,6 +61,7 @@ class flit
     std::pair<flit_stage, Cycles> get_stage() { return m_stage; }
     Cycles get_src_delay() { return src_delay; }
     bool get_is_dummy(){return m_is_dummy;}
+    bool get_contains_dummy(){return m_contains_dummy;}
 
     void set_outport(int port) { m_outport = port; }
     void set_time(Cycles time) { m_time = time; }
@@ -68,9 +69,11 @@ class flit
     void set_route(RouteInfo route) { m_route = route; }
     void set_src_delay(Cycles delay) { src_delay = delay; }
     void set_dequeue_time(Cycles time) { m_dequeue_time = time; }
-    void set_is_dummy(bool is_dummy){is_dummy = m_is_dummy;}
+    void set_is_dummy(bool is_dummy){m_is_dummy = is_dummy;}
+    void set_contains_dummy(bool contains_dummy){m_contains_dummy=contains_dummy;}
     void set_size(int size){m_size = size;}
     void set_type(flit_type type){m_type = type;}
+    void set_id(int id){m_id = id;}
 
     void increment_hops() { m_route.hops_traversed++; }
     void print(std::ostream& out) const;
@@ -115,6 +118,7 @@ class flit
     Cycles src_delay;
     std::pair<flit_stage, Cycles> m_stage;
     bool m_is_dummy;
+    bool m_contains_dummy;
 };
 
 inline std::ostream&
