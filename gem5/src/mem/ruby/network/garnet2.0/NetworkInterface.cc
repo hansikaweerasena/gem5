@@ -380,7 +380,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         int rand_num = random_mt.random<unsigned>(0, 100);
         bool add_dummy_flit = false;
         bool contains_dummy = false;
-        if(rand_num < 50){
+        if(rand_num < 80){
             add_dummy_flit = true;
             contains_dummy = true;
             num_flits = num_flits + 1;
