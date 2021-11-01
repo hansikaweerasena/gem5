@@ -39,7 +39,7 @@ using namespace std;
 
 InputUnit::InputUnit(int id, PortDirection direction, Router *router)
   : Consumer(router), m_router(router), m_id(id), m_direction(direction),
-    m_vc_per_vnet(m_router->get_vc_per_vnet())
+    m_vc_per_vnet(m_router->get_vc_per_vnet()), m_enable_add_chaff(m_router->get_enable_add_chaff())
 {
     const int m_num_vcs = m_router->get_num_vcs();
     m_num_buffer_reads.resize(m_num_vcs/m_vc_per_vnet);
@@ -78,7 +78,7 @@ InputUnit::wakeup()
 
         //removing dummy flit logic
         int no_of_hops = t_flit->get_route().hops_traversed;
-        if(no_of_hops == 2){
+        if(m_enable_add_chaff && no_of_hops == 2){
             int m_initial_size = t_flit->get_size();
             if(t_flit->get_contains_dummy()){
                 t_flit->set_size(m_initial_size - 1);
@@ -102,7 +102,9 @@ InputUnit::wakeup()
             if ((t_flit->get_type() == HEAD_) ||
                 (t_flit->get_type() == HEAD_TAIL_)) {
 
-                // assert(virtualChannels[vc].get_state() == IDLE_);
+                if(!m_enable_add_chaff){
+                    assert(virtualChannels[vc].get_state() == IDLE_);
+                }
                 set_vc_active(vc, m_router->curCycle());
 
                 // Route computation for this vc

@@ -136,6 +136,7 @@ class GarnetSyntheticTraffic : public ClockedObject
     // Correlated Pair
     int corPairP1;
     int corPairP2;
+    int corPrec;
     
     MasterID masterId;
 

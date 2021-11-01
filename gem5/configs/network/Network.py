@@ -74,6 +74,9 @@ def define_options(parser):
     parser.add_option("--garnet-deadlock-threshold", action="store",
                       type="int", default=50000,
                       help="network-level deadlock threshold.")
+    parser.add_option("--enable-add-chaff", action="store_true",
+                      default=False,
+                      help="Enable adding chaff?")
 
 
 def create_network(options, ruby):
@@ -121,3 +124,6 @@ def init_network(options, network, InterfaceClass):
         assert(options.network == "garnet2.0")
         network.enable_fault_model = True
         network.fault_model = FaultModel()
+
+    if options.enable_add_chaff:
+        network.enable_add_chaff = True

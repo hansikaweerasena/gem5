@@ -78,6 +78,7 @@ class Router : public BasicRouter, public Consumer
     int get_num_inports()   { return m_input_unit.size(); }
     int get_num_outports()  { return m_output_unit.size(); }
     int get_id()            { return m_id; }
+    bool get_enable_add_chaff() {return m_enable_add_chaff;}
 
     void init_net_ptr(GarnetNetwork* net_ptr)
     {
@@ -131,6 +132,7 @@ class Router : public BasicRouter, public Consumer
   private:
     Cycles m_latency;
     int m_virtual_networks, m_vc_per_vnet, m_num_vcs;
+    bool m_enable_add_chaff;
     GarnetNetwork *m_network_ptr;
 
     RoutingUnit routingUnit;

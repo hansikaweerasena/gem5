@@ -53,6 +53,7 @@ NetworkInterface::NetworkInterface(const Params *p)
     m_router_id(-1), m_vc_allocator(m_virtual_networks, 0),
     m_vc_round_robin(0), outFlitQueue(), outCreditQueue(),
     m_deadlock_threshold(p->garnet_deadlock_threshold),
+    m_enable_add_chaff(p->enable_add_chaff),
     vc_busy_counter(m_virtual_networks, 0)
 {
     const int num_vcs = m_vc_per_vnet * m_virtual_networks;
@@ -380,7 +381,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         int rand_num = random_mt.random<unsigned>(0, 100);
         bool add_dummy_flit = false;
         bool contains_dummy = false;
-        if(rand_num < 80){
+        if(m_enable_add_chaff && rand_num < 80){
             add_dummy_flit = true;
             contains_dummy = true;
             num_flits = num_flits + 1;

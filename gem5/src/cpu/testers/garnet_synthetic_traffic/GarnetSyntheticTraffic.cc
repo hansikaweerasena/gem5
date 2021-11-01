@@ -95,6 +95,7 @@ GarnetSyntheticTraffic::GarnetSyntheticTraffic(const Params *p)
       responseLimit(p->response_limit),
       corPairP1(p->cor_pair_p1),
       corPairP2(p->cor_pair_p2),
+      corPrec(p->cor_prec),
       masterId(p->system->getMasterId(this))
 {
     // random_gen = Random((unsigned int)time(NULL));
@@ -198,7 +199,7 @@ GarnetSyntheticTraffic::generatePkt()
     int source = id;
     int src_x = id%radix;
     int src_y = id/radix;
-    int dest_prob = 101;
+    int dest_prob = corPrec + 1;
 
     // corelated destination will selected with dest_prob probability
     // corelated destination selection if current processor is the other pair.

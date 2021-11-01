@@ -155,6 +155,8 @@ class InputUnit : public Consumer
     CreditLink *m_credit_link;
     flitBuffer creditQueue;
 
+    bool m_enable_add_chaff;
+
     // Input Virtual channels
     std::vector<VirtualChannel> virtualChannels;
 

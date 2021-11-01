@@ -91,6 +91,10 @@ parser.add_option("--cor-p2", type="int", default=0,
                   help="Identifier for P1 for correlated\
                         traffic collection")
 
+parser.add_option("--cor-prec", type="int", default=0,
+                  help="Identifier for P1 for correlated\
+                        traffic collection")
+
 #
 # Add the ruby specific and protocol specific options
 #
@@ -120,7 +124,8 @@ cpus = [ GarnetSyntheticTraffic(
                      precision=options.precision,
                      num_dest=options.num_dirs,
                      cor_pair_p1=options.cor_p1,
-                     cor_pair_p2=options.cor_p2) \
+                     cor_pair_p2=options.cor_p2,
+                     cor_prec=options.cor_prec) \
          for i in range(options.num_cpus) ]
 
 # create the desired simulated system

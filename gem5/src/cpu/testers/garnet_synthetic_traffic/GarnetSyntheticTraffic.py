@@ -55,3 +55,4 @@ class GarnetSyntheticTraffic(ClockedObject):
     system = Param.System(Parent.any, "System we belong to")
     cor_pair_p1 = Param.Int("Identifier for 1st cor pair IP")
     cor_pair_p2 = Param.Int("Identifier for 2nd cor pair IP")
+    cor_prec = Param.Int(100,"Percentage traffic distribution among correlated pairs")
