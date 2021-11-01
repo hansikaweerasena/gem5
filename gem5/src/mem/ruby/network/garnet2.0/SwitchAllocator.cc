@@ -128,11 +128,14 @@ SwitchAllocator::arbitrate_inports()
                 if (make_request) {
 
                     flit *t_flit = input_unit->peekTopFlit(invc);
+
+                    // invremet credit if the flit is dummy flit logic
                     if(t_flit->get_route().hops_traversed == 2 && t_flit->get_is_dummy()){
                         input_unit->getTopFlit(invc);
                         input_unit->increment_credit(invc, false, m_router->curCycle());
                         break;
                     }
+                    // end invremet credit if the flit is dummy flit logic 
 
                     m_input_arbiter_activity++;
                     m_port_requests[outport][inport] = true;
