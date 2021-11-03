@@ -32,7 +32,7 @@
 
 // Constructor for the flit
 flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
-    MsgPtr msg_ptr, Cycles curTime, bool contains_dummy, bool is_dummy)
+    MsgPtr msg_ptr, Cycles curTime, bool contains_dummy, bool is_dummy, bool add_delay)
 {
     m_size = size;
     m_msg_ptr = msg_ptr;
@@ -47,6 +47,7 @@ flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
     m_stage.second = m_time;
     m_is_dummy = is_dummy;
     m_contains_dummy = contains_dummy;
+    m_add_delay = add_delay;
 
     if (size == 1) {
         m_type = HEAD_TAIL_;
@@ -61,6 +62,12 @@ flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
 }
 
 // constructor delegation
+flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
+    MsgPtr msg_ptr, Cycles curTime, bool contains_dummy, bool is_dummy) : flit(id, vc, vnet, route, size, msg_ptr, curTime, contains_dummy, is_dummy, false)
+{
+    
+}
+
 flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
     MsgPtr msg_ptr, Cycles curTime, bool contains_dummy) : flit(id, vc, vnet, route, size, msg_ptr, curTime, contains_dummy, false)
 {

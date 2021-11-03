@@ -46,6 +46,8 @@ class flit
          MsgPtr msg_ptr, Cycles curTime, bool contains_dummy);
     flit(int id, int vc, int vnet, RouteInfo route, int size,
          MsgPtr msg_ptr, Cycles curTime, bool contains_dummy, bool is_dummy);
+    flit(int id, int vc, int vnet, RouteInfo route, int size,
+         MsgPtr msg_ptr, Cycles curTime, bool contains_dummy, bool is_dummy, bool add_delay);
 
     int get_outport() {return m_outport; }
     int get_size() { return m_size; }
@@ -62,6 +64,7 @@ class flit
     Cycles get_src_delay() { return src_delay; }
     bool get_is_dummy(){return m_is_dummy;}
     bool get_contains_dummy(){return m_contains_dummy;}
+    bool get_add_delay(){return m_add_delay;}
 
     void set_outport(int port) { m_outport = port; }
     void set_time(Cycles time) { m_time = time; }
@@ -74,6 +77,7 @@ class flit
     void set_size(int size){m_size = size;}
     void set_type(flit_type type){m_type = type;}
     void set_id(int id){m_id = id;}
+    void set_add_delay(bool add_delay){m_add_delay=add_delay;}
 
     void increment_hops() { m_route.hops_traversed++; }
     void print(std::ostream& out) const;
@@ -119,6 +123,7 @@ class flit
     std::pair<flit_stage, Cycles> m_stage;
     bool m_is_dummy;
     bool m_contains_dummy;
+    bool m_add_delay;
 };
 
 inline std::ostream&
