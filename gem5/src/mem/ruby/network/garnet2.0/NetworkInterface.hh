@@ -87,6 +87,7 @@ class NetworkInterface : public ClockedObject, public Consumer
     int m_deadlock_threshold;
 
     bool m_enable_add_chaff;
+    bool m_enable_add_delay;
 
     Random random_gen;
 

@@ -54,6 +54,7 @@ NetworkInterface::NetworkInterface(const Params *p)
     m_vc_round_robin(0), outFlitQueue(), outCreditQueue(),
     m_deadlock_threshold(p->garnet_deadlock_threshold),
     m_enable_add_chaff(p->enable_add_chaff),
+    m_enable_add_delay(p->enable_add_chaff),
     vc_busy_counter(m_virtual_networks, 0)
 {
     const int num_vcs = m_vc_per_vnet * m_virtual_networks;
@@ -386,12 +387,22 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
             contains_dummy = true;
             num_flits = num_flits + 1;
         }
+
+        bool add_random_delay = false;
+        int rand_num_2 = random_mt.random<unsigned>(0, 100);
+        if(m_enable_add_delay && rand_num_2 < 80){
+            add_random_delay = true;
+        }
+
         for (int i = 0; i < num_flits; i++) {
             m_net_ptr->increment_injected_flits(vnet);
             flit *fl = new flit(i, vc, vnet, route, num_flits, new_msg_ptr,
                 curCycle(), contains_dummy);
             if(add_dummy_flit && (i == 0)){
                 fl->set_is_dummy(true);
+            }
+            if(add_random_delay && (i == num_flits - 1)){
+                fl->set_add_delay(true);
             }
             fl->set_src_delay(curCycle() - ticksToCycles(msg_ptr->getTime()));
             niOutVcs[vc].insert(fl);

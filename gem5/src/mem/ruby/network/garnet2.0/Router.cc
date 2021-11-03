@@ -38,6 +38,8 @@
 #include "mem/ruby/network/garnet2.0/NetworkLink.hh"
 #include "mem/ruby/network/garnet2.0/OutputUnit.hh"
 
+#include "debug/Hello.hh"
+
 using namespace std;
 
 Router::Router(const Params *p)
@@ -48,6 +50,8 @@ Router::Router(const Params *p)
 {
     m_input_unit.clear();
     m_output_unit.clear();
+
+    // DPRINTF(Hello, "Router created with latency: %#i \n", m_latency);
 }
 
 void

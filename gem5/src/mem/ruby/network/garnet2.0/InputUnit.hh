@@ -156,6 +156,7 @@ class InputUnit : public Consumer
     flitBuffer creditQueue;
 
     bool m_enable_add_chaff;
+    Cycles last_flit_sa_wakeup;
 
     // Input Virtual channels
     std::vector<VirtualChannel> virtualChannels;

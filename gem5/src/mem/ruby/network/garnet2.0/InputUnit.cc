@@ -54,6 +54,7 @@ InputUnit::InputUnit(int id, PortDirection direction, Router *router)
     for (int i=0; i < m_num_vcs; i++) {
         virtualChannels.emplace_back();
     }
+    last_flit_sa_wakeup=Cycles(0);
 }
 
 /*
@@ -131,9 +132,34 @@ InputUnit::wakeup()
 
         Cycles pipe_stages = m_router->get_pipe_stages();
         if (pipe_stages == 1) {
-            // 1-cycle router
-            // Flit goes for SA directly
-            t_flit->advance_stage(SA_, m_router->curCycle());
+            if(no_of_hops == 2){
+                if (last_flit_sa_wakeup > m_router->curCycle())
+                {
+                    Cycles wait_time = Cycles(1);
+                    if(t_flit->get_add_delay()){
+                        wait_time = wait_time + Cycles(1);
+                    }
+                    t_flit->advance_stage(SA_, last_flit_sa_wakeup + wait_time);
+                    m_router->schedule_wakeup(Cycles(wait_time));
+                    last_flit_sa_wakeup = last_flit_sa_wakeup + wait_time;
+                }else{
+                    if(t_flit->get_add_delay()){
+                        Cycles wait_time = Cycles(1);
+                        t_flit->advance_stage(SA_, m_router->curCycle() + wait_time);
+                        m_router->schedule_wakeup(Cycles(wait_time));
+                        last_flit_sa_wakeup = m_router->curCycle() + wait_time;
+                    }else{
+                        t_flit->advance_stage(SA_, m_router->curCycle());
+                    }
+                }
+                
+            }else{
+                // 1-cycle router
+                // Flit goes for SA directly
+                t_flit->advance_stage(SA_, m_router->curCycle());
+            }
+
+
         } else {
             assert(pipe_stages > 1);
             // Router delay is modeled by making flit wait in buffer for
