@@ -47,8 +47,9 @@ class GarnetNetwork(RubyNetwork):
     enable_fault_model = Param.Bool(False, "enable network fault model");
     fault_model = Param.FaultModel(NULL, "network fault model");
     garnet_deadlock_threshold = Param.UInt32(50000,
-                              "network-level deadlock threshold")
-    enable_add_chaff = Param.Bool(False, "Initialte adding chaff")
+                              "network-level deadlock threshold");
+    enable_add_chaff = Param.Bool(False, "Initialte adding chaff");
+    enable_add_delay = Param.Bool(False, "Initialte adding delay")
 
 class GarnetNetworkInterface(ClockedObject):
     type = 'GarnetNetworkInterface'
@@ -63,6 +64,7 @@ class GarnetNetworkInterface(ClockedObject):
     garnet_deadlock_threshold = Param.UInt32(Parent.garnet_deadlock_threshold,
                                       "network-level deadlock threshold")
     enable_add_chaff = Param.Bool(Parent.enable_add_chaff, "Initialte adding chaff")
+    enable_add_delay = Param.Bool(Parent.enable_add_delay, "Initialte adding delay")
 
 class GarnetRouter(BasicRouter):
     type = 'GarnetRouter'

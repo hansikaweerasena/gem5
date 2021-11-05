@@ -77,6 +77,9 @@ def define_options(parser):
     parser.add_option("--enable-add-chaff", action="store_true",
                       default=False,
                       help="Enable adding chaff?")
+    parser.add_option("--enable-add-delay", action="store_true",
+                      default=False,
+                      help="Enable adding delay?")
 
 
 def create_network(options, ruby):
@@ -127,3 +130,6 @@ def init_network(options, network, InterfaceClass):
 
     if options.enable_add_chaff:
         network.enable_add_chaff = True
+    
+    if options.enable_add_delay:
+        network.enable_add_delay= True

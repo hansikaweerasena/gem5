@@ -54,7 +54,7 @@ NetworkInterface::NetworkInterface(const Params *p)
     m_vc_round_robin(0), outFlitQueue(), outCreditQueue(),
     m_deadlock_threshold(p->garnet_deadlock_threshold),
     m_enable_add_chaff(p->enable_add_chaff),
-    m_enable_add_delay(p->enable_add_chaff),
+    m_enable_add_delay(p->enable_add_delay),
     vc_busy_counter(m_virtual_networks, 0)
 {
     const int num_vcs = m_vc_per_vnet * m_virtual_networks;
