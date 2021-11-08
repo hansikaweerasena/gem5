@@ -2,11 +2,13 @@ import glob
 import os
 import numpy as np
 from random import randint
+import argparse, sys
 
-NUMBER_OF_NODES = "64_nodes"
+
+NUMBER_OF_NODES = "64_nodes_111"
 BASE_PATH = "/home/hansika/gem5/gem5/scripts/"
 CALCULATED_DIR_PATH = BASE_PATH + "calculated_test/"
-RAW_DATA_DIR_PATH = BASE_PATH + "raw_data/"
+RAW_DATA_DIR_PATH = BASE_PATH + "dummy_raw_data/"
 NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data_test/"
 
 NUM_ITERATIONS_PER_FILE = 100
@@ -79,7 +81,8 @@ def convert_to_numpy_reduced(up_flit_ipd, down_flit_ipd, node1, node2, no_of_nod
     convert_to_numpy_local(up_flit_ipd.get(node2), down_flit_ipd.get(node1 + no_of_nodes), 1, numpy_for_dir, correlation_dir)
     convert_to_numpy_local(up_flit_ipd.get(node1), down_flit_ipd.get(node3 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
     convert_to_numpy_local(up_flit_ipd.get(node4), down_flit_ipd.get(node2 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
-
+    convert_to_numpy_local(up_flit_ipd.get(node3), down_flit_ipd.get(node4 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
+    convert_to_numpy_local(up_flit_ipd.get(node4), down_flit_ipd.get(node3 + no_of_nodes), 0, numpy_for_dir, correlation_dir)
 
 
 def convert_to_numpy_local(up_value, down_value, correlation, numpy_for_dir, correlation_dir):
@@ -170,6 +173,27 @@ def save_numpy_array(numpy_for_dir, correlation_dir, index):
     np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES + "/X", index), np.array(numpy_for_dir))
     np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES + "/Y", index), np.array(correlation_dir))
 
+
+parser=argparse.ArgumentParser()
+
+parser.add_argument('--no-of-nodes', help='Number of nodes eg: 64_nodes_100_c')
+parser.add_argument('--base-path', help='base path of the data')
+parser.add_argument('--cal-dir-path', help='calculated dir path')
+parser.add_argument('--rawd-dir-path', help='raw data dir path')
+parser.add_argument('--numpy-dir-path', help='numpy dir path')
+
+args=parser.parse_args()
+
+if args.no_of_nodes != None:
+    NUMBER_OF_NODES = args.no_of_nodes
+if args.base_path != None:
+    BASE_PATH = args.base_path
+if args.cal_dir_path != None:
+    CALCULATED_DIR_PATH = BASE_PATH + args.cal_dir_path
+if args.rawd_dir_path != None:
+    RAW_DATA_DIR_PATH = BASE_PATH + args.rawd_dir_path
+if args.numpy_dir_path != None:
+    NUMPY_DATA_DIR_PATH = BASE_PATH + args.numpy_dir_path
 
 
 if calculate_reduced:
