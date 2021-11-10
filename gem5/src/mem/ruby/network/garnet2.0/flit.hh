@@ -65,6 +65,7 @@ class flit
     bool get_is_dummy(){return m_is_dummy;}
     bool get_contains_dummy(){return m_contains_dummy;}
     bool get_add_delay(){return m_add_delay;}
+    int get_added_delay(){return m_added_delay;}
 
     void set_outport(int port) { m_outport = port; }
     void set_time(Cycles time) { m_time = time; }
@@ -78,6 +79,7 @@ class flit
     void set_type(flit_type type){m_type = type;}
     void set_id(int id){m_id = id;}
     void set_add_delay(bool add_delay){m_add_delay=add_delay;}
+    void set_added_delay(int added_delay){m_added_delay=added_delay;}
 
     void increment_hops() { m_route.hops_traversed++; }
     void print(std::ostream& out) const;
@@ -124,6 +126,7 @@ class flit
     bool m_is_dummy;
     bool m_contains_dummy;
     bool m_add_delay;
+    int m_added_delay;
 };
 
 inline std::ostream&

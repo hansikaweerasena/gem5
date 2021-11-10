@@ -133,18 +133,18 @@ InputUnit::wakeup()
         Cycles pipe_stages = m_router->get_pipe_stages();
         if (pipe_stages == 1) {
             if(no_of_hops == 2){
-                if (last_flit_sa_wakeup > m_router->curCycle())
+                if (last_flit_sa_wakeup >= m_router->curCycle())
                 {
-                    Cycles wait_time = Cycles(1);
+                    Cycles wait_time = last_flit_sa_wakeup - m_router->curCycle() + Cycles(1);
                     if(t_flit->get_add_delay()){
-                        wait_time = wait_time + Cycles(1);
+                        wait_time = wait_time + Cycles(t_flit->get_added_delay());
                     }
                     t_flit->advance_stage(SA_, last_flit_sa_wakeup + wait_time);
                     m_router->schedule_wakeup(Cycles(wait_time));
                     last_flit_sa_wakeup = last_flit_sa_wakeup + wait_time;
                 }else{
                     if(t_flit->get_add_delay()){
-                        Cycles wait_time = Cycles(1);
+                        Cycles wait_time = Cycles(t_flit->get_added_delay());
                         t_flit->advance_stage(SA_, m_router->curCycle() + wait_time);
                         m_router->schedule_wakeup(Cycles(wait_time));
                         last_flit_sa_wakeup = m_router->curCycle() + wait_time;

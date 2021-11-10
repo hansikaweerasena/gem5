@@ -48,6 +48,7 @@ flit::flit(int id, int  vc, int vnet, RouteInfo route, int size,
     m_is_dummy = is_dummy;
     m_contains_dummy = contains_dummy;
     m_add_delay = add_delay;
+    m_added_delay = 0;
 
     if (size == 1) {
         m_type = HEAD_TAIL_;
