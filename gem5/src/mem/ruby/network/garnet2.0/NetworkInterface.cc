@@ -390,7 +390,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
 
         bool add_random_delay = false;
         int rand_num_2 = random_mt.random<unsigned>(0, 100);
-        if(m_enable_add_delay && rand_num_2 < 80){
+        if(m_enable_add_delay && rand_num_2 < 20){
             add_random_delay = true;
         }
 
