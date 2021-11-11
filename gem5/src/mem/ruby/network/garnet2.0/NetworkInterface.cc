@@ -403,7 +403,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
             }
             if(add_random_delay && (i == num_flits - 1)){
                 fl->set_add_delay(true);
-                fl->set_added_delay(random_mt.random<unsigned>(1, 20));
+                fl->set_added_delay(random_mt.random<unsigned>(1, 10));
             }
             fl->set_src_delay(curCycle() - ticksToCycles(msg_ptr->getTime()));
             niOutVcs[vc].insert(fl);
