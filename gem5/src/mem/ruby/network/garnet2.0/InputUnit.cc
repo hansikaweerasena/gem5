@@ -66,7 +66,6 @@ InputUnit::InputUnit(int id, PortDirection direction, Router *router)
  * and marked as valid for SwitchAllocation starting that cycle.
  *
  */
-
 void
 InputUnit::wakeup()
 {
@@ -89,10 +88,12 @@ InputUnit::wakeup()
                         t_flit->set_type(HEAD_TAIL_);
                     }
                 }else{
-                    if(t_flit->get_id() == 1){
+                    if(t_flit->get_dummy_flit_id() == 0 && t_flit->get_id() == 1){
                         t_flit->set_type(HEAD_);
                     }
-                    t_flit->set_id(t_flit->get_id() - 1);
+                    if(t_flit->get_id() > t_flit->get_dummy_flit_id()){
+                        t_flit->set_id(t_flit->get_id() - 1);
+                    }
                 }
             }
             
@@ -133,6 +134,7 @@ InputUnit::wakeup()
         Cycles pipe_stages = m_router->get_pipe_stages();
         if (pipe_stages == 1) {
             if(no_of_hops == 2){
+                // adding random delay logic
                 if (last_flit_sa_wakeup >= m_router->curCycle())
                 {
                     Cycles wait_time = last_flit_sa_wakeup - m_router->curCycle() + Cycles(1);

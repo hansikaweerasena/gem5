@@ -382,26 +382,33 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         int rand_num = random_mt.random<unsigned>(0, 100);
         bool add_dummy_flit = false;
         bool contains_dummy = false;
+        int dummy_flit_id = 1000;
         if(m_enable_add_chaff && rand_num < 80){
             add_dummy_flit = true;
             contains_dummy = true;
+            dummy_flit_id = rand_num%num_flits;
             num_flits = num_flits + 1;
         }
 
         bool add_random_delay = false;
         int rand_num_2 = random_mt.random<unsigned>(0, 100);
+        int delay_flit_id = 1000;
         if(m_enable_add_delay && rand_num_2 < 20){
             add_random_delay = true;
+            delay_flit_id = rand_num%num_flits;
         }
 
         for (int i = 0; i < num_flits; i++) {
             m_net_ptr->increment_injected_flits(vnet);
             flit *fl = new flit(i, vc, vnet, route, num_flits, new_msg_ptr,
                 curCycle(), contains_dummy);
-            if(add_dummy_flit && (i == 0)){
-                fl->set_is_dummy(true);
+            if(add_dummy_flit){
+                fl->set_dummy_flit_id(dummy_flit_id);
+                if(i==dummy_flit_id){
+                    fl->set_is_dummy(true);
+                }
             }
-            if(add_random_delay && (i == num_flits - 1)){
+            if(add_random_delay && (i == delay_flit_id)){
                 fl->set_add_delay(true);
                 fl->set_added_delay(random_mt.random<unsigned>(1, 10));
             }
