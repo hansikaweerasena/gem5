@@ -383,17 +383,18 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
         bool add_dummy_flit = false;
         bool contains_dummy = false;
         int dummy_flit_id = 1000;
-        if(m_enable_add_chaff && rand_num < 80){
+        if(m_enable_add_chaff && rand_num < 50){
             add_dummy_flit = true;
             contains_dummy = true;
-            dummy_flit_id = rand_num%num_flits;
+            // dummy_flit_id = rand_num%num_flits;
+            dummy_flit_id = 0;
             num_flits = num_flits + 1;
         }
 
         bool add_random_delay = false;
         int rand_num_2 = random_mt.random<unsigned>(0, 100);
         int delay_flit_id = 1000;
-        if(m_enable_add_delay && rand_num_2 < 20){
+        if(m_enable_add_delay && rand_num_2 < 50){
             add_random_delay = true;
             delay_flit_id = rand_num%num_flits;
         }
@@ -410,7 +411,7 @@ NetworkInterface::flitisizeMessage(MsgPtr msg_ptr, int vnet)
             }
             if(add_random_delay && (i == delay_flit_id)){
                 fl->set_add_delay(true);
-                fl->set_added_delay(random_mt.random<unsigned>(1, 10));
+                fl->set_added_delay(random_mt.random<unsigned>(1, 5));
             }
             fl->set_src_delay(curCycle() - ticksToCycles(msg_ptr->getTime()));
             niOutVcs[vc].insert(fl);
