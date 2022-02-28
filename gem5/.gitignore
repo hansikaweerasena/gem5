@@ -40,3 +40,4 @@ scripts/calculated_test/
 scripts/numpy_data_*/
 scripts/dummy_*/
 scripts/.idea/
+scripts/raw_data*/

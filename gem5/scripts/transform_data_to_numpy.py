@@ -197,7 +197,7 @@ if args.numpy_dir_path != None:
 
 
 if calculate_reduced:
-    NUMPY_DATA_DIR_PATH = BASE_PATH + "numpy_data_reduced/"
+    NUMPY_DATA_DIR_PATH = NUMPY_DATA_DIR_PATH[0:-1] + "_reduced/"
 
 list_subdir_with_paths = [f.path for f in os.scandir(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/") if f.is_dir()]
 print(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/")
