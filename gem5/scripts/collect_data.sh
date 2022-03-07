@@ -4,8 +4,9 @@ export iterations=$3
 export simCycles=$4
 export dest_folder=$5
 export traffic_prob=$6
-export apply_cf=$7
-export apply_delay=$8
+export injection_rate=$7
+export apply_cf=$8
+export apply_delay=$9
 
 echo "Running traffic corelation data for and rows : " $nodes " " $rows
 
@@ -39,14 +40,14 @@ do
         for k in $( eval echo {0..$(($iterations-1))})
         do
             export out_filename="${nodes}_${i}_${j}_${k}.txt" 
-            ../build/X86_DeepCorr/gem5.debug -d $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}"/${i}_${j} --debug-file=$out_filename --debug-flags=GarnetSyntheticTraffic2,Hello ../configs/example/garnet_synth_traffic.py --cor-p1=$i --cor-p2=$j --cor-prec=$traffic_prob --num-cpus=$nodes --num-dirs=$nodes --network=garnet2.0 --topology=Mesh_XY --mesh-rows=$rows --sim-cycles=$simCycles  --synthetic=uniform_random --injectionrate=0.01  $cw_flag  $delay_flag
+            ../build/X86_DeepCorr/gem5.debug -d $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}_${injection_rate}"/${i}_${j} --debug-file=$out_filename --debug-flags=GarnetSyntheticTraffic2,Hello ../configs/example/garnet_synth_traffic.py --cor-p1=$i --cor-p2=$j --cor-prec=$traffic_prob --num-cpus=$nodes --num-dirs=$nodes --network=garnet2.0 --topology=Mesh_XY --mesh-rows=$rows --sim-cycles=$simCycles  --synthetic=uniform_random --injectionrate=$injection_rate  $cw_flag  $delay_flag
         done
-        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}"/${i}_${j}/fs
-        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}"/${i}_${j}/*.dot
-        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}"/${i}_${j}/*.pdf
-        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}"/${i}_${j}/*.svg
-        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}"/${i}_${j}/*.ini
-        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}"/${i}_${j}/*.json
+        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}_${injection_rate}"/${i}_${j}/fs
+        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}_${injection_rate}"/${i}_${j}/*.dot
+        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}_${injection_rate}"/${i}_${j}/*.pdf
+        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}_${injection_rate}"/${i}_${j}/*.svg
+        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}_${injection_rate}"/${i}_${j}/*.ini
+        rm -r $dest_folder/"${nodes}_nodes_${traffic_prob}_${cw}${delay}_${injection_rate}"/${i}_${j}/*.json
     done
 done
 
