@@ -28,7 +28,7 @@ def remove_prefix(text, prefix):
 
 
 def write_to_file(file, dirr, syntheticTrafficCount, niPacketCount, flitCount):
-    with open(CALCULATED_DIR_PATH + NUMBER_OF_NODES + "/" + dirr + "/" + file, 'w') as f:
+    with open(CALCULATED_DIR_PATH + NUMBER_OF_NODES_OUT + "/" + dirr + "/" + file, 'w') as f:
         f.write("----synthetic traffic generation count---- \n")
         for key, value in syntheticTrafficCount.items():
             f.write("%s : %s\n" % (key, value))
@@ -170,8 +170,8 @@ def process_file(filename, numpy_for_dir, correlation_dir):
 
 
 def save_numpy_array(numpy_for_dir, correlation_dir, index):
-    np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES + "/X", index), np.array(numpy_for_dir))
-    np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES + "/Y", index), np.array(correlation_dir))
+    np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES_OUT + "/X", index), np.array(numpy_for_dir))
+    np.save(os.path.join(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES_OUT + "/Y", index), np.array(correlation_dir))
 
 
 parser=argparse.ArgumentParser()
@@ -181,6 +181,7 @@ parser.add_argument('--base-path', help='base path of the data')
 parser.add_argument('--cal-dir-path', help='calculated dir path')
 parser.add_argument('--rawd-dir-path', help='raw data dir path')
 parser.add_argument('--numpy-dir-path', help='numpy dir path')
+parser.add_argument('--min-max-length', help='min max length of the IFD array')
 
 args=parser.parse_args()
 
@@ -194,23 +195,27 @@ if args.rawd_dir_path != None:
     RAW_DATA_DIR_PATH = BASE_PATH + args.rawd_dir_path
 if args.numpy_dir_path != None:
     NUMPY_DATA_DIR_PATH = BASE_PATH + args.numpy_dir_path
+if args.min_max_length != None:
+    MIN_MAX_LENGTH = int(args.min_max_length)
 
 
 if calculate_reduced:
     NUMPY_DATA_DIR_PATH = NUMPY_DATA_DIR_PATH[0:-1] + "_reduced/"
 
+NUMBER_OF_NODES_OUT = NUMBER_OF_NODES + "_" + str(MIN_MAX_LENGTH)
+
 list_subdir_with_paths = [f.path for f in os.scandir(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/") if f.is_dir()]
 print(RAW_DATA_DIR_PATH + NUMBER_OF_NODES + "/")
-create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES)
-create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES +"/X")
-create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES +"/Y")
+create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES_OUT)
+create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES_OUT +"/X")
+create_dir(NUMPY_DATA_DIR_PATH + NUMBER_OF_NODES_OUT +"/Y")
 
 numpy_for_dir = []
 correlation_dir = []
 i = 1
 j = 0
 for sub_dir in list_subdir_with_paths:
-    create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES + "/" + os.path.basename(sub_dir))
+    create_dir(CALCULATED_DIR_PATH + NUMBER_OF_NODES_OUT + "/" + os.path.basename(sub_dir))
     for filename in glob.glob(sub_dir + "/[!stats]*.txt"):
         process_file(filename, numpy_for_dir, correlation_dir)
         i += 1
