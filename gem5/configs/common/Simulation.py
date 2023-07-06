@@ -726,6 +726,28 @@ def run(options, root, testsys, cpu_class):
                                       maxtick, options.repeat_switch)
         else:
             exit_event = benchCheckpoints(options, maxtick, cptdir)
+            if exit_event:
+                m5.stats.reset()
+                exit_event = m5.simulate(maxtick - m5.curTick())
+                print("switching")
+                switch_cpus = [
+                    TimingSimpleCPU(switched_out=True, cpu_id=(i)) for i in range(np)
+                ]
+                print(switch_cpus)
+                for i in range(np):
+                    switch_cpus[i].system = testsys
+                    switch_cpus[i].workload = testsys.cpu[i].workload
+                    switch_cpus[i].clk_domain = testsys.cpu[i].clk_domain
+                    switch_cpus[i].isa = testsys.cpu[i].isa
+
+                    testsys.cpu[i].max_insts_any_thread = 1
+
+                    switch_cpus[i].createThreads()
+
+                testsys.switch_cpus = switch_cpus
+                switch_cpu_list = [(testsys.cpu[i], switch_cpus[i]) for i in range(np)]
+                print(switch_cpu_list)
+                m5.switchCpus(testsys, switch_cpu_list)
 
     print('Exiting @ tick %i because %s' %
           (m5.curTick(), exit_event.getCause()))
