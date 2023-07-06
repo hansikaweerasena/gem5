@@ -1,0 +1,6 @@
+#! /bin/sh
+echo "executing hello world";
+sleep 20;
+m5 exit;
+echo "Now we should switch CPU";
+sleep 20;
